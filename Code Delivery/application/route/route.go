@@ -10,14 +10,14 @@ import (
 )
 
 type Route struct {
-	ID        string
-	CLientID  string
-	Positions []Position
+	ID        string     `json:"routeId"`
+	CLientID  string     `json:"clientId"`
+	Positions []Position `json:"position"`
 }
 
 type Position struct {
-	Lat  float64
-	Long float64
+	Lat  float64 `json:"lat"`
+	Long float64 `json:"long"`
 }
 
 type PartialRoutePosition struct {
@@ -60,7 +60,7 @@ func (r *Route) LoadPositions() error {
 	return nil
 }
 
-func (r *Route) ExportJsonPositions() error {
+func (r *Route) ExportJsonPositions() ([]string, error) {
 	var route PartialRoutePosition
 	var result []string
 	total := len(r.Positions)
@@ -75,8 +75,9 @@ func (r *Route) ExportJsonPositions() error {
 		}
 		jsonRoute, err := json.Marshal(route)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		result = append(result, string(jsonRoute))
 	}
+	return result, nil
 }
